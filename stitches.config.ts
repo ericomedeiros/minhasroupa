@@ -5,7 +5,14 @@ export const { styled, getCssText } = createStitches({
         fonts: {
             system: 'system-ui',
         },
+        
         colors: {
+            elementBackground: '#004643',
+            elementParagraph: '#abd1c6',
+            elementButtonText: '#001e1d',
+            elementButton: '#f9bc60',
+            elementHeadLine: '#fffffe',
+            cardBackground: '#004643',
             hiContrast: 'hsl(206,10%,5%)',
             loContrast: 'white',
         },
