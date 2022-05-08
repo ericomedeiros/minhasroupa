@@ -1,8 +1,8 @@
 import { styled } from '../stitches.config';
 
-const WeatherCardSunStyle = styled('div',{
-    position: 'absolute',
-    top: '-42%',
+const WeatherCardSunStyle = styled('div', {
+    position: 'relative',
+    top: '-98px',
     left: '90%',
     width: '200px',
     height: '200px',

@@ -9,12 +9,12 @@ type WeatherCard = {
 
 export function WeatherCard(params:WeatherCard) {
     return (
-        <WeatherCardStyle WeatherType={params.weatherType}>
-            <WeatherCardSunStyle WeatherType={params.weatherType}/>
+        <WeatherCardStyle WeatherType={params.weatherType as any}>
+            <WeatherCardSunStyle WeatherType={params.weatherType as any}/>
             <WeatherCardTitleStyle>
                 {params.text}
             </WeatherCardTitleStyle>
-            <WeatherCardCloudStyle WeatherType={params.weatherType} Raining={params.weatherType=="raining"}>
+            <WeatherCardCloudStyle WeatherType={params.weatherType as any} Raining={params.weatherType=="raining"}>
                 <ul>
                     <li></li>
                     <li></li>

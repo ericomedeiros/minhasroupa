@@ -1,4 +1,5 @@
 import { styled } from "../stitches.config";
+
 const widthAmount = 330;
 export const WeatherCardCloudStyle = styled('div', {
     backgroundColor: '#ccc',
@@ -42,6 +43,4 @@ export const WeatherCardCloudStyle = styled('div', {
             }
         }
     }
-
-
 });
