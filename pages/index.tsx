@@ -6,9 +6,11 @@ import { styled } from '../stitches.config';
 import { WeatherCard } from '../components/WeatherCard';
 
 interface WeatherMessages {
-  sunny: string[],
-  raining: string[],
-  willRain: string[],
+  [index: string]: string[];
+  blank: string[];
+  sunny: string[];
+  raining: string[];
+  willRain: string[];
 }
 
 const Search = styled('input', {
@@ -25,8 +27,10 @@ const Search = styled('input', {
   },
 });
 
-const weatherTypes:string[] = ["sunny","raining","willRain"];
 const weatherMessages: WeatherMessages = {
+  blank: [
+    "Previ nada"
+  ],
   sunny: [
     "Vamo pendurar, hoje ta que tá",
     "É pra fazer duas maquinadas tranquilamente",
@@ -40,16 +44,18 @@ const weatherMessages: WeatherMessages = {
     "Pendura, mas fica de olho",
   ],
 };
+const weatherTypes = Object.keys(weatherMessages);
 
-function ramdomWeatherType(params:string) {
+
+function ramdomWeatherType(params:string): string {
   if(params.length > 0){
     const idx = Math.floor(Math.random() * weatherTypes.length);
     return weatherTypes[idx];
   }
-  return "";
+  return weatherTypes[0];
 }
 
-function ramdomWeatherMessage(weatherType: keyof WeatherMessages): string {
+function ramdomWeatherMessage(weatherType: string): string {
   if(weatherType.length > 0){
     const idx = Math.floor(Math.random() * weatherMessages[weatherType].length);
     return weatherMessages[weatherType][idx];
