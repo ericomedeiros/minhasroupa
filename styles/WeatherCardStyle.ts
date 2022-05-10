@@ -14,8 +14,9 @@ const WeatherCardStyle = styled('div',{
     backgroundColor: '$cardBackground',
     position: 'relative',
     width: '100%',
+    maxWidth: '877px',
     height: '100%',
-    zIndex: '1',
+    zIndex: '10',
     minHeight: '45vh',
     textAlign: 'center',
     lineHeight: '1',
@@ -30,7 +31,7 @@ const WeatherCardStyle = styled('div',{
                 backgroundColor: '#656d78',
             },
             sunny: {
-                backgroundColor: '#F17022',
+                backgroundColor: 'SkyBlue',
             },
         }
     }
