@@ -24,6 +24,22 @@ export function WeatherCard(params:WeatherCard) {
                     <li></li>
                     <li></li>
                     <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
                 </ul>
             </WeatherCardCloudStyle>
         </WeatherCardStyle>
