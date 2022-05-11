@@ -5,6 +5,7 @@ const WeatherCardTitleStyle = styled('span', {
     top: '0',
     left: '0',
     width: '100%',
+    zIndex: '10',
 });
 
 const WeatherCardStyle = styled('div',{
@@ -33,6 +34,9 @@ const WeatherCardStyle = styled('div',{
             sunny: {
                 backgroundColor: 'SkyBlue',
             },
+            willRain: {
+                backgroundColor: '#e6e6e6',
+            }
         }
     }
 });

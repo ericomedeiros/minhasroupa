@@ -63,12 +63,45 @@ function ramdomWeatherMessage(weatherType: string): string {
   return "";
 }
 
+async function findCities(params:string) {
+  if(!params) 
+    return;
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${params}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+
+  const resp = await fetch(url);
+  if (resp.ok) {
+    const data = await resp.json();
+    console.log(data);
+  } else {
+    const data = await resp.json();
+    console.log(data);
+    return [data.message]
+  }
+}
+
 const Home: NextPage = () => {
   const [search, setSearch] = useState("");
   const currWeatherType = ramdomWeatherType(search);
   const currWeatherMeesage = ramdomWeatherMessage(currWeatherType);
   
+  async function findCities(param:string) {
+    if(!param) 
+      return;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${param}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+  
+    const resp = await fetch(url);
+    if (resp.ok) {
+      const data = await resp.json();
+      console.log(data);
+    } else {
+      const data = await resp.json();
+      console.log(data);
+      return [data.message]
+    }
+  }
   function searchLocation(params:React.ChangeEvent<HTMLInputElement>) {
+    const foundCities = findCities(search);
+    
     setSearch(params.target.value);
   }
 
