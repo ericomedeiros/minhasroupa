@@ -4,6 +4,8 @@ import Head from 'next/head'
 import stylesHome from '../styles/Home.module.css'
 import { styled } from '../stitches.config';
 import { WeatherCard } from '../components/WeatherCard';
+import { CitiesList } from '../components/CitiesList';
+
 
 interface WeatherMessages {
   [index: string]: string[];
@@ -15,7 +17,7 @@ interface WeatherMessages {
 
 const Search = styled('input', {
   backgroundColor: '$elementBackground',
-  borderRadius: '9999px',
+  borderRadius: '10px 10px 10px 10px',
   borderColor: '$elementButtonText',
   fontSize: '13px',
   color: '$elementHeadLine',
@@ -25,6 +27,13 @@ const Search = styled('input', {
     backgroundColor: '$elementBackground',
     borderColor: '$elementButtonText',
   },
+  variants: {
+    cities:{
+      true:{
+        borderRadius: '10px 10px 0px 0px',
+      }
+    }
+  }
 });
 
 const weatherMessages: WeatherMessages = {
@@ -48,11 +57,11 @@ const weatherTypes = Object.keys(weatherMessages);
 
 
 function ramdomWeatherType(params:string): string {
+  return weatherTypes[0];
   if(params.length > 0){
     const idx = Math.floor(Math.random() * weatherTypes.length);
     return weatherTypes[idx];
   }
-  return weatherTypes[0];
 }
 
 function ramdomWeatherMessage(weatherType: string): string {
@@ -63,49 +72,39 @@ function ramdomWeatherMessage(weatherType: string): string {
   return "";
 }
 
-async function findCities(params:string) {
-  if(!params) 
-    return;
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${params}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
-
-  const resp = await fetch(url);
-  if (resp.ok) {
-    const data = await resp.json();
-    console.log(data);
-  } else {
-    const data = await resp.json();
-    console.log(data);
-    return [data.message]
-  }
-}
-
 const Home: NextPage = () => {
   const [search, setSearch] = useState("");
+  const [cities, setCities] = useState([]);
+  const [city, setCity] = useState("");
   const currWeatherType = ramdomWeatherType(search);
   const currWeatherMeesage = ramdomWeatherMessage(currWeatherType);
   
   async function findCities(param:string) {
-    if(!param) 
+    if(param.length === 0){
+      setCities([]);
       return;
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${param}&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+    }
+    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${param}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
   
     const resp = await fetch(url);
     if (resp.ok) {
       const data = await resp.json();
+      setCities(data);
       console.log(data);
     } else {
-      const data = await resp.json();
-      console.log(data);
-      return [data.message]
+      if (cities.length > 0) {
+        setCities([]);
+      }
     }
   }
   function searchLocation(params:React.ChangeEvent<HTMLInputElement>) {
-    const foundCities = findCities(search);
-    
+    const foundCities = findCities(params.target.value);
     setSearch(params.target.value);
   }
 
-  
+  function selectCity(params:{lat:DoubleRange,lon:DoubleRange}) {
+    alert(`${params.lon},${params.lat}`)
+  }
 
   return (
     <div className={stylesHome.container}>
@@ -121,7 +120,8 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={stylesHome.grid}>
-          <Search type={'search'} placeholder={'Onde está?'} onChange={searchLocation}/>
+          <Search cities={cities.length > 0} type={'search'} placeholder={'Onde está?'} onChange={searchLocation}/>
+          <CitiesList selectCity={selectCity} cities={cities}/>
         </div>
         <WeatherCard text={currWeatherMeesage} weatherType={currWeatherType}/>
       </main>
