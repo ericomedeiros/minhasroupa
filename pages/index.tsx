@@ -95,7 +95,7 @@ const Home: NextPage = () => {
       setCities([]);
       return;
     }
-    const url = `http://api.openweathermap.org/geo/1.0/direct?q=${param}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${param}&limit=10&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
   
     const resp = await fetch(url);
     if (resp.ok) {
