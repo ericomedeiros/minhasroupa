@@ -28,17 +28,27 @@ const WeatherCardStyle = styled('div',{
             blank: {
                 backgroundColor: '$elementBackground',
             },
-            raining: {
+            rain: {
                 backgroundColor: '#656d78',
             },
-            sunny: {
+            thunderstorm: {
+                backgroundColor: '#656d78',
+            },
+            drizzle: {
+                backgroundColor: '#656d78',
+            },
+            clear: {
                 backgroundColor: 'SkyBlue',
             },
-            willRain: {
+            clouds: {
                 backgroundColor: '#e6e6e6',
-            }
+            },
+            snow: {
+                backgroundColor: '#e6e6e6',
+            },
         }
     }
 });
+
 
 export {WeatherCardTitleStyle,WeatherCardStyle};

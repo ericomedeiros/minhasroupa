@@ -16,10 +16,22 @@ const WeatherCardSunStyle = styled('div', {
             blank: {
                 display: 'none',
             },
-            raining: {
+            rain: {
                 display: 'none',
             },
-            willRain: {
+            thunderstorm: {
+                display: 'none',
+            },
+            drizzle: {
+                display: 'none',
+            },
+            clear: {
+                backgroundColor: 'SkyBlue',
+            },
+            clouds: {
+                display: 'none',
+            },
+            snow: {
                 display: 'none',
             },
         }

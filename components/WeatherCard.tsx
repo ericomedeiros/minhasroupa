@@ -14,7 +14,7 @@ export function WeatherCard(params:WeatherCard) {
             <WeatherCardTitleStyle>
                 {params.text}
             </WeatherCardTitleStyle>
-            <WeatherCardCloudStyle WeatherType={params.weatherType as any} Raining={params.weatherType=="raining"}>
+            <WeatherCardCloudStyle WeatherType={params.weatherType as any} Raining={params.weatherType as any}>
                 <ul>
                     <li></li>
                     <li></li>

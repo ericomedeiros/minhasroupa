@@ -68,20 +68,34 @@ export const WeatherCardCloudStyle = styled('div', {
             blank: {
                 display: 'none',
             },
-            sunny: {
+            clear: {
                 display: 'none',
             },
         },
         Raining: {
-            true: {
+            thunderstorm: {
                 '& ul': {
                     display: 'inline-block',
                 },
             },
-            false: {
+            drizzle: {
+                '& ul': {
+                    display: 'inline-block',
+                },
+            },
+            rain: {
+                '& ul': {
+                    display: 'inline-block',
+                },
+            },
+            clouds: {
                 transform: `translateX(-901px)`,
                 animation:  `${Clouds} linear 15s infinite`,
-            }
+            },
+            snow: {
+                transform: `translateX(-901px)`,
+                animation:  `${Clouds} linear 15s infinite`,
+            },
         }
     }
 });

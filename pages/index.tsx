@@ -9,9 +9,12 @@ import { CitiesList } from '../components/CitiesList';
 interface WeatherMessages {
   [index: string]: string[];
   blank: string[];
-  sunny: string[];
-  raining: string[];
-  willRain: string[];
+  thunderstorm: string[];
+  drizzle: string[];
+  clear: string[];
+  rain: string[];
+  snow: string[];
+  clouds: string[];
 }
 
 const Search = styled('input', {
@@ -39,15 +42,26 @@ const weatherMessages: WeatherMessages = {
   blank: [
     "Previ nada"
   ],
-  sunny: [
+  thunderstorm: [
+    "Pra que ta aqui? Tá caindo o mundo",
+    "Não",
+  ],
+  drizzle: [
+    "Um chuvisco, só pra deixar quase poder"
+  ],
+  clear: [
     "Vamo pendurar, hoje ta que tá",
     "É pra fazer duas maquinadas tranquilamente",
   ],
-  raining: [
+  rain: [
     "Corre!",
     "Se não notou até agora, já foi",
   ],
-  willRain: [
+  snow: [
+    "Ué nevando, tem coragem nesse friu?",
+    "Agora é só ficar na coberta"
+  ],
+  clouds: [
     "Se tem sorte, vai rapido",
     "Pendura, mas fica de olho",
   ],
@@ -74,9 +88,7 @@ function ramdomWeatherMessage(weatherType: string): string {
 const Home: NextPage = () => {
   const [search, setSearch] = useState("");
   const [cities, setCities] = useState([]);
-  const [city, setCity] = useState("");
-  const currWeatherType = ramdomWeatherType(search);
-  const currWeatherMeesage = ramdomWeatherMessage(currWeatherType);
+  const [weatherType, setWeatherType] = useState("");
   
   async function findCities(param:string) {
     if(param.length === 0){
@@ -96,51 +108,66 @@ const Home: NextPage = () => {
       }
     }
   }
+
   function searchLocation(params:React.ChangeEvent<HTMLInputElement>) {
     const foundCities = findCities(params.target.value);
     setSearch(params.target.value);
   }
 
-  function selectCity(params:{lat:DoubleRange,lon:DoubleRange}) {
+  async function selectCity(params:{lat:DoubleRange,lon:DoubleRange}) {
 
     const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${params.lat}&lon=${params.lon}&units=metric&exclude=minutely,hourly&appid=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}`;
     
     const resp = await fetch(url);
     if (resp.ok) {
       const data = await resp.json();
+      console.log(data);
       //data.current.weather.id
       //data.daily[].weather.id
-      switch (data.current.weather.id | 0) {
+      const weather = (data.current.weather[0].id / 100);
+
+      switch (weather | 0) {
         case 2:
         //IDs: 200~232 -> Thunderstorm
-        
+        setWeatherType("thunderstorm")
         break;
+        
         case 3:
-        //IDs: 300~321 -> Drizzle
-        
+          //IDs: 300~321 -> Drizzle
+          setWeatherType("drizzle")
         break;
+
         case 5:
-        //IDs: 500~531 -> Rain
-        
+          //IDs: 500~531 -> Rain
+          setWeatherType("rain")
         break;
+
         case 6:
-        //IDs: 600~622 -> Snow
-        
+          //IDs: 600~622 -> Snow
+          setWeatherType("snow")
         break;
+
         case 8:
-        //IDs: 800     -> Clear
-        //IDs: 801~804 -> Clouds
-        
+          //IDs: 800     -> Clear
+          //IDs: 801~804 -> Clouds
+          if(weather == 8) {
+            setWeatherType("clear")
+          } else {
+            setWeatherType("clouds")
+          }
         break;
+
         default:
+          setWeatherType("")
         break;
       }
       console.log(data);
     } else {
       setSearch("Ocorreu um erro procure novamente as cidades");
+      setWeatherType("")
+
     }
     setCities([]);
-    alert(`${params.lon},${params.lat}`)
   }
 
   return (
@@ -160,7 +187,7 @@ const Home: NextPage = () => {
           <Search cities={cities.length > 0} type={'search'} placeholder={'Onde está?'} onChange={searchLocation}/>
           <CitiesList selectCity={selectCity} cities={cities}/>
         </div>
-        <WeatherCard text={currWeatherMeesage} weatherType={currWeatherType}/>
+        <WeatherCard text={ramdomWeatherMessage(weatherType)} weatherType={weatherType || "blank"}/>
       </main>
 
       <footer className={stylesHome.footer}>
