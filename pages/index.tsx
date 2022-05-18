@@ -17,6 +17,14 @@ interface WeatherMessages {
   clouds: string[];
 }
 
+interface WeatherInfo {
+    weatherType: keyof WeatherMessages;
+    humidity: number;
+}
+interface WeatherInfoList {
+  [index: number]: WeatherInfo[];
+}
+
 const Search = styled('input', {
   backgroundColor: '$elementBackground',
   borderRadius: '10px 10px 10px 10px',
@@ -124,43 +132,67 @@ const Home: NextPage = () => {
       console.log(data);
       //data.current.weather.id
       //data.daily[].weather.id
-      const weather = (data.current.weather[0].id / 100);
-
-      switch (weather | 0) {
-        case 2:
-        //IDs: 200~232 -> Thunderstorm
-        setWeatherType("thunderstorm")
-        break;
-        
-        case 3:
-          //IDs: 300~321 -> Drizzle
-          setWeatherType("drizzle")
-        break;
-
-        case 5:
-          //IDs: 500~531 -> Rain
-          setWeatherType("rain")
-        break;
-
-        case 6:
-          //IDs: 600~622 -> Snow
-          setWeatherType("snow")
-        break;
-
-        case 8:
-          //IDs: 800     -> Clear
-          //IDs: 801~804 -> Clouds
-          if(weather == 8) {
-            setWeatherType("clear")
-          } else {
-            setWeatherType("clouds")
+      const forecast:WeatherInfoList = data.current.weather.map((ele:any) => {
+        const weatherID = ele.id / 100;
+        let curWeather:WeatherInfo;
+        switch (weatherID | 0) {
+          case 2:
+          //IDs: 200~232 -> Thunderstorm
+          curWeather = {
+            weatherType:"thunderstorm",
+            humidity: ele.humidity,
           }
-        break;
-
-        default:
-          setWeatherType("")
-        break;
-      }
+          break;
+          
+          case 3:
+            //IDs: 300~321 -> Drizzle
+            curWeather = {
+              weatherType:"drizzle",
+              humidity: ele.humidity,
+            }
+          break;
+  
+          case 5:
+            //IDs: 500~531 -> Rain
+            curWeather = {
+              weatherType:"rain",
+              humidity: ele.humidity,
+            }
+          break;
+  
+          case 6:
+            //IDs: 600~622 -> Snow
+            curWeather = {
+              weatherType:"snow",
+              humidity: ele.humidity,
+            }
+          break;
+  
+          case 8:
+            //IDs: 800     -> Clear
+            //IDs: 801~804 -> Clouds
+            if(weatherID == 8) {
+              curWeather = {
+                weatherType:"clear",
+                humidity: ele.humidity,
+              }
+            } else {
+              curWeather = {
+                weatherType:"clouds",
+                humidity: ele.humidity,
+              }
+            }
+          break;
+  
+          default:
+            curWeather = {
+              weatherType:"blank",
+              humidity: ele.humidity,
+            }
+          break;
+        }
+        return curWeather;
+      });
       console.log(data);
     } else {
       setSearch("Ocorreu um erro procure novamente as cidades");
