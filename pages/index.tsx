@@ -22,7 +22,7 @@ interface WeatherInfo {
     humidity: number;
 }
 interface WeatherInfoList {
-  [index: number]: WeatherInfo[];
+  [index: number]: WeatherInfo;
 }
 
 const Search = styled('input', {
@@ -85,18 +85,10 @@ function ramdomWeatherType(params:string): string {
   }
 }
 
-function ramdomWeatherMessage(weatherType: string): string {
-  if(weatherType.length > 0){
-    const idx = Math.floor(Math.random() * weatherMessages[weatherType].length);
-    return weatherMessages[weatherType][idx];
-  }
-  return "";
-}
-
 const Home: NextPage = () => {
   const [search, setSearch] = useState("");
   const [cities, setCities] = useState([]);
-  const [weatherType, setWeatherType] = useState("");
+  const [forecast, setForecast] = useState<WeatherInfoList | undefined>(undefined);
   
   async function findCities(param:string) {
     if(param.length === 0){
@@ -196,10 +188,19 @@ const Home: NextPage = () => {
       console.log(data);
     } else {
       setSearch("Ocorreu um erro procure novamente as cidades");
-      setWeatherType("")
+      setForecast(undefined)
 
     }
     setCities([]);
+    setForecast(forecast);
+  }
+
+  function ramdomWeatherMessage(): string {
+    if(forecast.length > 0){
+      const idx = Math.floor(Math.random() * weatherMessages[forecast].length);
+      return weatherMessages[forecast][idx];
+    }
+    return "";
   }
 
   return (
@@ -219,7 +220,7 @@ const Home: NextPage = () => {
           <Search cities={cities.length > 0} type={'search'} placeholder={'Onde está?'} onChange={searchLocation}/>
           <CitiesList selectCity={selectCity} cities={cities}/>
         </div>
-        <WeatherCard text={ramdomWeatherMessage(weatherType)} weatherType={weatherType || "blank"}/>
+        <WeatherCard text={ramdomWeatherMessage()} weatherType={forecast[0].weatherType || "blank"}/>
       </main>
 
       <footer className={stylesHome.footer}>
