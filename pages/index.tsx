@@ -101,7 +101,6 @@ const Home: NextPage = () => {
     if (resp.ok) {
       const data = await resp.json();
       setCities(data);
-      console.log(data);
     } else {
       if (cities.length > 0) {
         setCities([]);
@@ -185,20 +184,23 @@ const Home: NextPage = () => {
         }
         return curWeather;
       });
+      setForecast(forecast);
+      setCities([]);
       console.log(data);
     } else {
       setSearch("Ocorreu um erro procure novamente as cidades");
       setForecast(undefined)
-
     }
-    setCities([]);
-    setForecast(forecast);
   }
 
   function ramdomWeatherMessage(): string {
+    if(forecast === undefined){
+      return "";
+    }
     if(forecast.length > 0){
-      const idx = Math.floor(Math.random() * weatherMessages[forecast].length);
-      return weatherMessages[forecast][idx];
+      const weatherType = forecast[0].weatherType;
+      const idx = Math.floor(Math.random() * weatherMessages[weatherType].length);
+      return weatherMessages[weatherType][idx];
     }
     return "";
   }
@@ -220,7 +222,7 @@ const Home: NextPage = () => {
           <Search cities={cities.length > 0} type={'search'} placeholder={'Onde está?'} onChange={searchLocation}/>
           <CitiesList selectCity={selectCity} cities={cities}/>
         </div>
-        <WeatherCard text={ramdomWeatherMessage()} weatherType={forecast[0].weatherType || "blank"}/>
+        <WeatherCard text={ramdomWeatherMessage()} weatherType={forecast && forecast.length > 0 ? forecast[0].weatherType || "blank" : "blank"}/>
       </main>
 
       <footer className={stylesHome.footer}>
