@@ -18,12 +18,10 @@ interface WeatherMessages {
 }
 
 interface WeatherInfo {
-    weatherType: keyof WeatherMessages;
+    weatherType: keyof WeatherMessages & string;
     humidity: number;
 }
-interface WeatherInfoList {
-  [index: number]: WeatherInfo;
-}
+interface WeatherInfoList extends Array<WeatherInfo>{}
 
 const Search = styled('input', {
   backgroundColor: '$elementBackground',
