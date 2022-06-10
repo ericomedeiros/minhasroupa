@@ -224,7 +224,11 @@ const Home: NextPage = () => {
         </div>
         <WeatherCard text={ramdomWeatherMessage()} weatherType={forecast && forecast.length > 0 ? forecast[0].weatherType || "blank" : "blank"}/>
       </main>
-
+      <div>
+        {forecast?.map((ele, idx) => (
+          <WeatherCard key={`day-${idx}`} text={""} weatherType={ele.weatherType || "blank" }/>
+        ))}
+      </div>
       <footer className={stylesHome.footer}>
         
       </footer>
