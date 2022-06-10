@@ -17,7 +17,7 @@ const WeatherCardStyle = styled('div',{
     width: '100%',
     maxWidth: '877px',
     height: '100%',
-    zIndex: '10',
+    zIndex: '1',
     minHeight: '45vh',
     textAlign: 'center',
     lineHeight: '1',

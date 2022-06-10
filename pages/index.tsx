@@ -121,15 +121,16 @@ const Home: NextPage = () => {
       console.log(data);
       //data.current.weather.id
       //data.daily[].weather.id
-      const forecast:WeatherInfoList = data.current.weather.map((ele:any) => {
-        const weatherID = ele.id / 100;
+      const forecast:WeatherInfoList = data.daily.map((ele:any) => {
+        const weatherID = ele.weather[0].id / 100;
+        const humidity = ele.weather[0].humidity;
         let curWeather:WeatherInfo;
         switch (weatherID | 0) {
           case 2:
           //IDs: 200~232 -> Thunderstorm
           curWeather = {
             weatherType:"thunderstorm",
-            humidity: ele.humidity,
+            humidity: humidity,
           }
           break;
           
@@ -137,7 +138,7 @@ const Home: NextPage = () => {
             //IDs: 300~321 -> Drizzle
             curWeather = {
               weatherType:"drizzle",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
   
@@ -145,7 +146,7 @@ const Home: NextPage = () => {
             //IDs: 500~531 -> Rain
             curWeather = {
               weatherType:"rain",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
   
@@ -153,7 +154,7 @@ const Home: NextPage = () => {
             //IDs: 600~622 -> Snow
             curWeather = {
               weatherType:"snow",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
   
@@ -163,12 +164,12 @@ const Home: NextPage = () => {
             if(weatherID == 8) {
               curWeather = {
                 weatherType:"clear",
-                humidity: ele.humidity,
+                humidity: humidity,
               }
             } else {
               curWeather = {
                 weatherType:"clouds",
-                humidity: ele.humidity,
+                humidity: humidity,
               }
             }
           break;
@@ -176,7 +177,7 @@ const Home: NextPage = () => {
           default:
             curWeather = {
               weatherType:"blank",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
         }
@@ -184,10 +185,11 @@ const Home: NextPage = () => {
       });
       setForecast(forecast);
       setCities([]);
-      console.log(data);
+      setSearch("");
     } else {
       setSearch("Ocorreu um erro procure novamente as cidades");
       setForecast(undefined)
+      setCities([]);
     }
   }
 
