@@ -18,12 +18,10 @@ interface WeatherMessages {
 }
 
 interface WeatherInfo {
-    weatherType: keyof WeatherMessages;
+    weatherType: keyof WeatherMessages & string;
     humidity: number;
 }
-interface WeatherInfoList {
-  [index: number]: WeatherInfo[];
-}
+interface WeatherInfoList extends Array<WeatherInfo>{}
 
 const Search = styled('input', {
   backgroundColor: '$elementBackground',
@@ -85,18 +83,10 @@ function ramdomWeatherType(params:string): string {
   }
 }
 
-function ramdomWeatherMessage(weatherType: string): string {
-  if(weatherType.length > 0){
-    const idx = Math.floor(Math.random() * weatherMessages[weatherType].length);
-    return weatherMessages[weatherType][idx];
-  }
-  return "";
-}
-
 const Home: NextPage = () => {
   const [search, setSearch] = useState("");
   const [cities, setCities] = useState([]);
-  const [weatherType, setWeatherType] = useState("");
+  const [forecast, setForecast] = useState<WeatherInfoList | undefined>(undefined);
   
   async function findCities(param:string) {
     if(param.length === 0){
@@ -109,7 +99,6 @@ const Home: NextPage = () => {
     if (resp.ok) {
       const data = await resp.json();
       setCities(data);
-      console.log(data);
     } else {
       if (cities.length > 0) {
         setCities([]);
@@ -132,15 +121,16 @@ const Home: NextPage = () => {
       console.log(data);
       //data.current.weather.id
       //data.daily[].weather.id
-      const forecast:WeatherInfoList = data.current.weather.map((ele:any) => {
-        const weatherID = ele.id / 100;
+      const forecast:WeatherInfoList = data.daily.map((ele:any) => {
+        const weatherID = ele.weather[0].id / 100;
+        const humidity = ele.weather[0].humidity;
         let curWeather:WeatherInfo;
         switch (weatherID | 0) {
           case 2:
           //IDs: 200~232 -> Thunderstorm
           curWeather = {
             weatherType:"thunderstorm",
-            humidity: ele.humidity,
+            humidity: humidity,
           }
           break;
           
@@ -148,7 +138,7 @@ const Home: NextPage = () => {
             //IDs: 300~321 -> Drizzle
             curWeather = {
               weatherType:"drizzle",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
   
@@ -156,7 +146,7 @@ const Home: NextPage = () => {
             //IDs: 500~531 -> Rain
             curWeather = {
               weatherType:"rain",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
   
@@ -164,7 +154,7 @@ const Home: NextPage = () => {
             //IDs: 600~622 -> Snow
             curWeather = {
               weatherType:"snow",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
   
@@ -174,12 +164,12 @@ const Home: NextPage = () => {
             if(weatherID == 8) {
               curWeather = {
                 weatherType:"clear",
-                humidity: ele.humidity,
+                humidity: humidity,
               }
             } else {
               curWeather = {
                 weatherType:"clouds",
-                humidity: ele.humidity,
+                humidity: humidity,
               }
             }
           break;
@@ -187,19 +177,32 @@ const Home: NextPage = () => {
           default:
             curWeather = {
               weatherType:"blank",
-              humidity: ele.humidity,
+              humidity: humidity,
             }
           break;
         }
         return curWeather;
       });
-      console.log(data);
+      setForecast(forecast);
+      setCities([]);
+      setSearch("");
     } else {
       setSearch("Ocorreu um erro procure novamente as cidades");
-      setWeatherType("")
-
+      setForecast(undefined)
+      setCities([]);
     }
-    setCities([]);
+  }
+
+  function ramdomWeatherMessage(): string {
+    if(forecast === undefined){
+      return "";
+    }
+    if(forecast.length > 0){
+      const weatherType = forecast[0].weatherType;
+      const idx = Math.floor(Math.random() * weatherMessages[weatherType].length);
+      return weatherMessages[weatherType][idx];
+    }
+    return "";
   }
 
   return (
@@ -219,7 +222,7 @@ const Home: NextPage = () => {
           <Search cities={cities.length > 0} type={'search'} placeholder={'Onde está?'} onChange={searchLocation}/>
           <CitiesList selectCity={selectCity} cities={cities}/>
         </div>
-        <WeatherCard text={ramdomWeatherMessage(weatherType)} weatherType={weatherType || "blank"}/>
+        <WeatherCard text={ramdomWeatherMessage()} weatherType={forecast && forecast.length > 0 ? forecast[0].weatherType || "blank" : "blank"}/>
       </main>
 
       <footer className={stylesHome.footer}>

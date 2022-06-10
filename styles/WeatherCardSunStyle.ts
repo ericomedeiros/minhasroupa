@@ -26,7 +26,7 @@ const WeatherCardSunStyle = styled('div', {
                 display: 'none',
             },
             clear: {
-                backgroundColor: 'SkyBlue',
+                display: 'block',
             },
             clouds: {
                 display: 'none',
